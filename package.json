@@ -1,6 +1,9 @@
 {
   "name": "english-word-test-server",
   "version": "0.0.1",
+  "engines": {
+    "node": "16.x"
+  },
   "description": "",
   "author": "",
   "private": true,
