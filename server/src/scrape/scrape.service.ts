@@ -7,7 +7,10 @@ import { UnitNamesEntity } from './unit-name.entity';
 export class ScrapeService {
   async getWords(grade: string) {
     // ブラウザを開く
-    const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
     // 新しいページを開く
     const page = await browser.newPage();
     // ページ遷移
@@ -32,7 +35,6 @@ export class ScrapeService {
         continue;
       }
       units.addUnit(unit);
-      if (i > 2) break;
     }
     await browser.close();
     return units;
@@ -87,7 +89,10 @@ export class ScrapeService {
   }
   async getUnitNames(grade: string): Promise<UnitNamesEntity> {
     // ブラウザを開く
-    const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
     // 新しいページを開く
     const page = await browser.newPage();
     // ページ遷移
