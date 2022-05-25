@@ -40,6 +40,9 @@ jobs:
             "isLocalCreds": false
           }
           EOS
-      - name: Deploy
+      - name: Push
         run: |
           clasp push -P ./gas/.clasp.json
+      - name: Deploy
+        run: |
+          clasp deploy --deploymentId ${{ secret.DEPLOYMENT_ID }}
