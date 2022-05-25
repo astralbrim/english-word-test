@@ -38,18 +38,24 @@ export class TestSheet {
       str = str.concat(question.number + ',');
     });
     str = str.slice(0, -1);
-    str += `%26mode=${mode[0]==='英'? 0 : 1}`;
-    console.log(str);
+    const str0 = `${str}%26mode=0`;
+    const str1 = `${str}%26mode=1`;
     this.testSheet.insertImage(
-      this.utils.createQrCode(this.utils.toURL(webhookURL, 'test', str)),
+      this.utils.createQrCode(this.utils.toURL(webhookURL, 'test', str0)),
       4,
       1,
       410,
       0,
     );
-    const image = this.testSheet.getImages()[0];
-    image.setHeight(230);
-    image.setWidth(230);
+    this.testSheet.insertImage(
+      this.utils.createQrCode(this.utils.toURL(webhookURL, 'test', str1)),
+      4,
+      1,
+      180,
+      0,
+    );
+    const images = this.testSheet.getImages();
+    images.forEach((image) => image.setWidth(230).setHeight(230));
     const row = 3;
     this.testSheet.setRowHeights(row, questionNums / 2 + 1, 100);
     const testRange = this.testSheet.getRange(
@@ -66,7 +72,6 @@ export class TestSheet {
       .getRange(row, 5, questionNums / 2 + 1)
       .setHorizontalAlignment('left');
     testRange.setBorder(true, true, true, true, true, true);
-    console.log(mode);
     let isEnglishToJapanese;
     if (mode) isEnglishToJapanese = mode[0] === '英';
     else isEnglishToJapanese = true;
