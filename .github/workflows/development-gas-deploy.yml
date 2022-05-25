@@ -42,7 +42,7 @@ jobs:
           EOS
       - name: Push
         run: |
-          clasp push -P ./gas/development.clasp.json
+          clasp push -P ./gas/.development.clasp.json
       - name: Deploy
         run: |
-          clasp deploy --deploymentId ${{ secrets.DEV_DEPLOYMENT_ID }} -P ./gas/development.clasp.json
+          clasp deploy --deploymentId ${{ secrets.DEV_DEPLOYMENT_ID }} -P ./gas/.development.clasp.json
