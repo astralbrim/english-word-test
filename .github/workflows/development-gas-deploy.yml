@@ -1,9 +1,9 @@
-name: Build, Push and Deploy to Google Apps Scripts
+name: Build, Push and Deploy to Google Apps Scripts (development environment)
 
 on:
   push:
     branches:
-      - master
+      - develop
   workflow_dispatch:
 jobs:
   deploy:
@@ -42,7 +42,7 @@ jobs:
           EOS
       - name: Push
         run: |
-          clasp push -P ./gas/.clasp.json
+          clasp push -P ./gas/development.clasp.json
       - name: Deploy
         run: |
-          clasp deploy --deploymentId ${{ secrets.DEPLOYMENT_ID }} -P ./gas/.clasp.json
+          clasp deploy --deploymentId ${{ secrets.DEV_DEPLOYMENT_ID }} -P ./gas/development.clasp.json

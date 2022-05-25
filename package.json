@@ -23,7 +23,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "connect": "ngrok http 3000",
-    "push": "clasp push -P ./gas/.clasp.json"
+    "push:prod": "clasp push -P gas/production.clasp.json",
+    "push:dev": "clasp push -P gas/development.clasp.json"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
