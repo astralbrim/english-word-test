@@ -3,7 +3,7 @@ import { RequestType } from './request-type';
 export class Utils {
   public createQrCode(code_data) {
     const url =
-      'https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=' + code_data;
+      `https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=${code_data}`;
     const ajax = UrlFetchApp.fetch(url, { method: 'get' });
     console.log(ajax.getBlob());
     return ajax.getBlob();

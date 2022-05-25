@@ -38,7 +38,8 @@ export class TestSheet {
       str = str.concat(question.number + ',');
     });
     str = str.slice(0, -1);
-    str += `&mode=${mode}`;
+    str += `%26mode=${mode[0]==='英'? 0 : 1}`;
+    console.log(str);
     this.testSheet.insertImage(
       this.utils.createQrCode(this.utils.toURL(webhookURL, 'test', str)),
       4,
