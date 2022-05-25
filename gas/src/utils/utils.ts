@@ -59,12 +59,7 @@ export class Utils {
     requestType: RequestType,
     data: string,
   ): string {
-    switch (requestType) {
-      case 'test':
-        return `${webhookURL}?${data}`;
-      case 'answer':
-        break;
-    }
+    return `${webhookURL}?requestType=${requestType}%26${data}`
   }
 }
 

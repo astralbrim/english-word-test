@@ -54,6 +54,13 @@ export class TestSheet {
       180,
       0,
     );
+    this.testSheet.insertImage(
+        this.utils.createQrCode(this.utils.toURL(webhookURL, 'answer', str)),
+        5,
+        1,
+        0,
+        0,
+    )
     const images = this.testSheet.getImages();
     images.forEach((image) => image.setWidth(230).setHeight(230));
     const row = 3;

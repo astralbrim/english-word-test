@@ -185,7 +185,6 @@ function doGet(e: DoGet) {
       )
       template.append("</ul>")
       return template;
-
   }
 
 }
