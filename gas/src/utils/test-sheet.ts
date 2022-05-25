@@ -38,8 +38,13 @@ export class TestSheet {
       str = str.concat(question.number + ',');
     });
     str = str.slice(0, -1);
-    const data = `${webhookURL}?word=${str}`;
-    this.testSheet.insertImage(this.utils.createQrCode(data), 4, 1, 410, 0);
+    this.testSheet.insertImage(
+      this.utils.createQrCode(this.utils.toURL(webhookURL, 'test', str)),
+      4,
+      1,
+      410,
+      0,
+    );
     const image = this.testSheet.getImages()[0];
     image.setHeight(230);
     image.setWidth(230);

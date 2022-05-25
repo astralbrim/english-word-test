@@ -1,3 +1,5 @@
+import { RequestType } from './request-type';
+
 export class Utils {
   public createQrCode(code_data) {
     const url =
@@ -52,6 +54,18 @@ export class Utils {
   }
   public getColumn(grade: number, column: number): number {
     return column + 4 * (grade - 1);
+  }
+  public toURL(
+    webhookURL: string,
+    requestType: RequestType,
+    data: string,
+  ): string {
+    switch (requestType) {
+      case 'test':
+        return `${webhookURL}?word=${data}`;
+      case 'answer':
+        break;
+    }
   }
 }
 
