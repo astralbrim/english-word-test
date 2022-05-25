@@ -4,7 +4,24 @@ import { TestSheet } from './utils/test-sheet';
 import { ControlSheet } from './utils/control-sheet';
 import { ListSheet } from './utils/list-sheet';
 import { Utils } from './utils/utils';
-
+function getSpreadSheet(): {
+  spreadsheet: GoogleAppsScript.Spreadsheet.Spreadsheet;
+  listSheet: ListSheet;
+  controlSheet: ControlSheet;
+  testSheet: TestSheet;
+} {
+  const spreadsheet = SpreadsheetApp.getActive();
+  const listSheet: ListSheet = new module.exports.ListSheet(
+    spreadsheet.getSheetByName('単語一覧'),
+  );
+  const controlSheet: ControlSheet = new module.exports.ControlSheet(
+    spreadsheet.getSheetByName('操作'),
+  );
+  const testSheet: TestSheet = new module.exports.TestSheet(
+    spreadsheet.getSheetByName('単語テスト'),
+  );
+  return { spreadsheet, listSheet, controlSheet, testSheet };
+}
 // noinspection JSUnusedLocalSymbols
 function init(option?: { setting?: boolean; unitList?: boolean }) {
   const spreadSheet = SpreadsheetApp.getActive();
@@ -78,84 +95,58 @@ function updateWordList() {
 // noinspection JSUnusedLocalSymbols
 function generateTestFromQrCode(wordIds: string[]) {
   const Utils = module.exports.Utils;
-  const utils = new Utils();
-  const spreadsheet = SpreadsheetApp.getActive();
-  const listSheet = spreadsheet.getSheetByName('単語一覧');
-  const controlSheet = spreadsheet.getSheetByName('操作');
-  const testSheet = spreadsheet.getSheetByName('単語テスト');
-  utils.clearContentsFormat(testSheet);
-  utils.removeImages(testSheet);
+  const utils: Utils = new Utils();
+  const {
+    spreadsheet,
+    listSheet,
+    controlSheet,
+    testSheet,
+  }: {
+    spreadsheet: GoogleAppsScript.Spreadsheet.Spreadsheet;
+    listSheet: ListSheet;
+    controlSheet: ControlSheet;
+    testSheet: TestSheet;
+  } = getSpreadSheet();
+  const { webhookURL } = controlSheet.getInfo();
   wordIds.forEach(() => console.log());
-  const words = Array<{ english: string; japanese: string; number: string }>();
-  wordIds.forEach((number) => {
-    const finder1 = listSheet.getRange(3, 1, 2000).createTextFinder(number);
-    const finder2 = listSheet.getRange(3, 5, 2000).createTextFinder(number);
-    const finder3 = listSheet.getRange(3, 9, 2000).createTextFinder(number);
-    let col, row;
-    const next1 = finder1.findNext();
-    const next2 = finder2.findNext();
-    const next3 = finder3.findNext();
-
-    switch (true) {
-      case !!next1:
-        col = next1.getColumn();
-        row = next1.getRow();
-        break;
-      case !!next2:
-        col = next2.getColumn();
-        row = next2.getRow();
-        break;
-      case !!next3:
-        col = next3.getColumn();
-        row = next3.getRow();
-        break;
-    }
-
-    const range = listSheet.getRange(row, col, 1, 4);
-    const japanese = range.getCell(1, 4).getValue();
-    const english = range.getCell(1, 3).getValue();
-    words.push({ english, japanese, number });
-  });
-  const questionNums = wordIds.length;
-  const title = '英単語テスト';
-  utils.getTest(spreadsheet, title, questionNums, words);
-  controlSheet.getRange('F2').setValue(utils.getPdf(spreadsheet));
+  testSheet.toTest(
+    '英単語テスト',
+    wordIds.length,
+    listSheet.getWordsById(wordIds),
+    webhookURL,
+  );
+  controlSheet.setPdfUrl(utils.getPdf(spreadsheet));
 }
 // noinspection JSUnusedLocalSymbols
 function generateTest() {
-  const spreadsheet = SpreadsheetApp.getActive();
+  const { spreadsheet, listSheet, controlSheet, testSheet } = getSpreadSheet();
   const utils: Utils = new module.exports.Utils();
-  const listSheet: ListSheet = new module.exports.ListSheet(
-    spreadsheet.getSheetByName('単語一覧'),
-  );
-  const controlSheet: ControlSheet = new module.exports.ControlSheet(
-    spreadsheet.getSheetByName('操作'),
-  );
-  const testSheet: TestSheet = new module.exports.TestSheet(
-    spreadsheet.getSheetByName('単語テスト'),
-  );
 
   const { gradeCell, modeCell, grade, mode, webhookURL } =
     controlSheet.getInfo();
   // バリデーション
-  controlSheet.checkValidation(gradeCell, modeCell);
-  if (!grade) controlSheet.changeCellColor(gradeCell, 'pink');
-  if (!mode) controlSheet.changeCellColor(modeCell, 'pink');
-  if (!grade || !mode) {
+  const { grade: isGradeBlank, mode: isModeBlank } =
+    controlSheet.checkValidation(gradeCell, modeCell);
+  if (isGradeBlank) controlSheet.changeCellColor(gradeCell, 'pink');
+  if (isModeBlank) controlSheet.changeCellColor(modeCell, 'pink');
+  if (isGradeBlank || isModeBlank) {
     controlSheet.showDialog('必要な情報が入力されていません');
     return;
+  } else {
+    controlSheet.changeCellColor(gradeCell, 'white');
+    controlSheet.changeCellColor(modeCell, 'white');
   }
 
   // テストにする単元名
   const testUnits = controlSheet.getCheckedUnitList();
   // テストにする単語
-  const words = listSheet.getWords(testUnits, grade);
+  const words = listSheet.getWordsByUnit(testUnits, grade);
   // 問題数
   const questionNums = controlSheet.getQuestionNums(words);
   // タイトルの作成
   const title = utils.generateTitle(grade, testUnits);
   //テストの作成
-  testSheet.toTest(title, questionNums, words, mode, webhookURL);
+  testSheet.toTest(title, questionNums, words, webhookURL, mode);
   // pdfに変換
   const url = utils.getPdf(spreadsheet);
   controlSheet.setPdfUrl(url);

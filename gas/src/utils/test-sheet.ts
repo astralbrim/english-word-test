@@ -59,7 +59,11 @@ export class TestSheet {
       .getRange(row, 5, questionNums / 2 + 1)
       .setHorizontalAlignment('left');
     testRange.setBorder(true, true, true, true, true, true);
-    const isEnglishToJapanese = mode ? mode === '英' : true;
+    console.log(mode);
+    let isEnglishToJapanese;
+    if (mode) isEnglishToJapanese = mode[0] === '英';
+    else isEnglishToJapanese = true;
+
     testRange.getCell(1, 1).setValue('No');
     testRange.getCell(1, 3).setValue('No');
     for (let i = 2; i < questionNums + 2; i++) {
