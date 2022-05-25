@@ -1,4 +1,4 @@
-name: Build and Deploy to Google Apps Scripts
+name: Build, Push and Deploy to Google Apps Scripts
 
 on:
   push:
@@ -45,4 +45,4 @@ jobs:
           clasp push -P ./gas/.clasp.json
       - name: Deploy
         run: |
-          clasp deploy --deploymentId ${{ secret.DEPLOYMENT_ID }}
+          clasp deploy --deploymentId ${{ secrets.DEPLOYMENT_ID }}
