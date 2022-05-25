@@ -32,6 +32,12 @@ export class TestSheet {
     this.setFormat();
     this.testSheet.getRange('A1').setValue(title.replaceAll(',', ''));
     this.testSheet.getRange('D1').setValue(`/${questionNums}`);
+    this.testSheet
+      .getRange('E1')
+      .setValue('答え')
+      .setHorizontalAlignment('center')
+      .setVerticalAlignment('bottom')
+      .setFontSize(20);
     const questions = this.utils.getRandom(words, questionNums);
     let str = 'word=';
     questions.forEach((question) => {
@@ -58,7 +64,7 @@ export class TestSheet {
       this.utils.createQrCode(this.utils.toURL(webhookURL, 'answer', str)),
       5,
       1,
-      0,
+      30,
       0,
     );
     const images = this.testSheet.getImages();
