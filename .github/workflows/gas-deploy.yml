@@ -45,4 +45,4 @@ jobs:
           clasp push -P ./gas/.clasp.json
       - name: Deploy
         run: |
-          clasp deploy --deploymentId ${{ secrets.DEPLOYMENT_ID }}
+          clasp deploy --deploymentId ${{ secrets.DEPLOYMENT_ID }} -P ./gas/.clasp.json
