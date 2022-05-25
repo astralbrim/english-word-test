@@ -62,7 +62,7 @@ export class Utils {
   ): string {
     switch (requestType) {
       case 'test':
-        return `${webhookURL}?word=${data}`;
+        return `${webhookURL}?${data}`;
       case 'answer':
         break;
     }

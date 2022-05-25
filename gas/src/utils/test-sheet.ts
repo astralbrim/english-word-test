@@ -27,17 +27,18 @@ export class TestSheet {
     questionNums: number,
     words: { english: string; japanese: string; number: string }[],
     webhookURL: string,
-    mode?: string,
+    mode: string,
   ) {
     this.setFormat();
     this.testSheet.getRange('A1').setValue(title.replaceAll(',', ''));
     this.testSheet.getRange('D1').setValue(`/${questionNums}`);
     const questions = this.utils.getRandom(words, questionNums);
-    let str = '';
+    let str = 'word=';
     questions.forEach((question) => {
       str = str.concat(question.number + ',');
     });
     str = str.slice(0, -1);
+    str += `&mode=${mode}`;
     this.testSheet.insertImage(
       this.utils.createQrCode(this.utils.toURL(webhookURL, 'test', str)),
       4,
