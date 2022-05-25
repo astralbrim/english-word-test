@@ -93,7 +93,7 @@ function updateWordList() {
   });
 }
 // noinspection JSUnusedLocalSymbols
-function generateTestFromQrCode(wordIds: string[]) {
+function generateTestFromQrCode(wordIds: string[], mode: string) {
   const Utils = module.exports.Utils;
   const utils: Utils = new Utils();
   const {
@@ -114,6 +114,7 @@ function generateTestFromQrCode(wordIds: string[]) {
     wordIds.length,
     listSheet.getWordsById(wordIds),
     webhookURL,
+    mode,
   );
   controlSheet.setPdfUrl(utils.getPdf(spreadsheet));
 }
@@ -154,7 +155,8 @@ function generateTest() {
 // noinspection JSUnusedLocalSymbols
 function doGet(e: DoGet) {
   const wordIds = e.parameters['word'].toString().split(',');
-  generateTestFromQrCode(wordIds);
+  const mode = e.parameters['mode'].toString();
+  generateTestFromQrCode(wordIds, mode);
   return ContentService.createTextOutput(
     '更新が完了しました。スプレッドシートの操作シートのpdfを印刷してください。',
   );
