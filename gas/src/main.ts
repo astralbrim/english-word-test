@@ -4,7 +4,7 @@ import { TestSheet } from './utils/test-sheet';
 import { ControlSheet } from './utils/control-sheet';
 import { ListSheet } from './utils/list-sheet';
 import { Utils } from './utils/utils';
-import {RequestType} from "./utils/request-type";
+import { RequestType } from './utils/request-type';
 function getSpreadSheet(): {
   spreadsheet: GoogleAppsScript.Spreadsheet.Spreadsheet;
   listSheet: ListSheet;
@@ -155,36 +155,37 @@ function generateTest() {
 }
 // noinspection JSUnusedLocalSymbols
 function getAnswer(wordIds: string[]): {
-  number: string, english: string, japanese: string
+  number: string;
+  english: string;
+  japanese: string;
 }[] {
-  const {listSheet} = getSpreadSheet();
-  return  listSheet.getWordsById(wordIds);
+  const { listSheet } = getSpreadSheet();
+  return listSheet.getWordsById(wordIds);
 }
 // noinspection JSUnusedLocalSymbols
 function doGet(e: DoGet) {
-  if(!e.parameters['requestType']) return;
+  if (!e.parameters['requestType']) return;
   const requestType = e.parameters['requestType'].toString() as RequestType;
   let wordIds;
   switch (requestType) {
-    case "test":
+    case 'test':
       wordIds = e.parameters['word'].toString().split(',');
       const mode = e.parameters['mode'].toString();
       generateTestFromQrCode(wordIds, mode);
       return ContentService.createTextOutput(
-          '更新が完了しました。スプレッドシートの操作シートのpdfを印刷してください。',
+        '更新が完了しました。スプレッドシートの操作シートのpdfを印刷してください。',
       );
-    case "answer":
+    case 'answer':
       wordIds = e.parameters['word'].toString().split(',');
       const answer = getAnswer(wordIds);
-      const template =  HtmlService.createHtmlOutputFromFile("templates");
-      template.append("<ul>")
-      answer.forEach(
-          (elem) => {
-            template.append(`<li>${elem.number}  ${elem.japanese}  ${elem.english}</li>`)
-          }
-      )
-      template.append("</ul>")
+      const template = HtmlService.createHtmlOutputFromFile('templates');
+      template.append('<ul>');
+      answer.forEach((elem) => {
+        template.append(
+          `<li>${elem.number}  ${elem.japanese}  ${elem.english}</li>`,
+        );
+      });
+      template.append('</ul>');
       return template;
   }
-
 }

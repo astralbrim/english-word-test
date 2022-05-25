@@ -24,7 +24,7 @@ export class ScrapeService {
     let i = -1;
     await page.waitForSelector('button#word_btn');
     const units = new UnitsEntity();
-    for (let input of inputs) {
+    for (const input of inputs) {
       i = i + 1;
       let unit;
       try {
@@ -45,7 +45,7 @@ export class ScrapeService {
     time: number,
   ): Promise<UnitEntity> {
     await page.waitForSelector('#checkbox0');
-    let input = (await page.$$('#checkbox0'))[time];
+    const input = (await page.$$('#checkbox0'))[time];
     console.log(time);
     await input.click();
     // ページ遷移

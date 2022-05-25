@@ -38,8 +38,8 @@ export class TestSheet {
       str = str.concat(question.number + ',');
     });
     str = str.slice(0, -1);
-    const str0 = `${str}%26mode=0`;
-    const str1 = `${str}%26mode=1`;
+    const str0 = `${str}%26mode=E`;
+    const str1 = `${str}%26mode=J`;
     this.testSheet.insertImage(
       this.utils.createQrCode(this.utils.toURL(webhookURL, 'test', str0)),
       4,
@@ -55,12 +55,12 @@ export class TestSheet {
       0,
     );
     this.testSheet.insertImage(
-        this.utils.createQrCode(this.utils.toURL(webhookURL, 'answer', str)),
-        5,
-        1,
-        0,
-        0,
-    )
+      this.utils.createQrCode(this.utils.toURL(webhookURL, 'answer', str)),
+      5,
+      1,
+      0,
+      0,
+    );
     const images = this.testSheet.getImages();
     images.forEach((image) => image.setWidth(230).setHeight(230));
     const row = 3;
@@ -80,7 +80,7 @@ export class TestSheet {
       .setHorizontalAlignment('left');
     testRange.setBorder(true, true, true, true, true, true);
     let isEnglishToJapanese;
-    if (mode) isEnglishToJapanese = mode[0] === '英';
+    if (mode) isEnglishToJapanese = mode[0] === 'E';
     else isEnglishToJapanese = true;
 
     testRange.getCell(1, 1).setValue('No');
