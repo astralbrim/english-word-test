@@ -2,8 +2,7 @@ import { RequestType } from './request-type';
 
 export class Utils {
   public createQrCode(code_data) {
-    const url =
-      `https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=${code_data}`;
+    const url = `https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=${code_data}`;
     const ajax = UrlFetchApp.fetch(url, { method: 'get' });
     console.log(ajax.getBlob());
     return ajax.getBlob();
@@ -60,12 +59,7 @@ export class Utils {
     requestType: RequestType,
     data: string,
   ): string {
-    switch (requestType) {
-      case 'test':
-        return `${webhookURL}?${data}`;
-      case 'answer':
-        break;
-    }
+    return `${webhookURL}?requestType=${requestType}%26${data}`
   }
 }
 
